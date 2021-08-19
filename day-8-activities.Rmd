@@ -1,0 +1,166 @@
+---
+title: "day-8-activities-data-viz"
+author: "Juliet"
+date: "8/18/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(paletteer)
+library(png)
+library(extrafont)
+```
+
+```{r}
+space_launches <- read.csv(here("data", "space_launches.csv"))
+```
+
+```{r}
+#import pic
+
+#png("Allison Horst_Bren_004.png",width=277, height=277)
+
+#img.file <- system.file(here("data", "Allison Horst_Bren_004.png"),
+                     # package = "ggpubr")
+#img.file <- png::readPNG("Allison Horst_Bren_004.png")
+  #code where I get rgb values for original
+
+#img <- read_csv(here:("data", "Allison Horst_Bren_004.jpg"))
+#img <- png::readPNG(img.file)
+
+# plot
+
+plot_1 <- ggplot(data = space_launches) +
+  geom_point(aes(
+    x = tag, y = variant,
+    color = launch_year,
+    size = launch_year),
+    alpha = 3) +
+  scale_color_gradientn(colors = c("orange", "red", "purple", "black")) +
+  theme(legend.position = "bottom",
+    panel.grid = element_line(),
+    plot.background = element_rect(fill = "cyan"),
+    axis.text.x = element_text(color = "orange"),
+    axis.title = element_text(color = "red", size = 34),
+    panel.grid.major.x = element_line(color = "green"),
+    panel.grid.minor.y = element_line(color = "blue", size = 4)) + 
+  labs(x = "t A g??", 
+       y = "V a R i A n T? ??",
+       title = "S p A c E S c I e N c E",
+       legend = "colors?")
+
+plot_1
+
+ggsave(here("figs", "space_launch.png"), plot = plot_1)
+
+```
+
+```{r}
+plot_2 <- ggplot(data = space_launches) +
+  geom_point(aes(
+    x = tag, y = variant,
+    color = type,
+    show.legend = FALSE),
+    size = 2) +
+  scale_fill_paletteer_d(palette = "tvthemes::EarthKingdom") + 
+  labs(x = "t A g??", 
+       y = "V a R i A n T? ??",
+       title = "S p A c E S c I e N c E") #+
+   #ggMarginal(plot_2, type = "boxplot", groupColour = TRUE)
+
+plot_2
+```
+
+
+
+## Task 1: do your worst
+
+```{r}
+ggplot(data = space_launches, aes(y = type, x = JD)) +
+  geom_() +
+  scale_fill_paletteer_d(palette = "tvthemes::EarthKingdom")
+```
+
+```{r}
+plot_1 <- ggplot(data = space_launches) +
+  geom_point(aes(
+    x = tag, y = variant,
+    color = launch_year), size = 2) +
+  scale_fill_paletteer_d(palette = "tvthemes::EarthKingdom") +
+  theme(legend.position = "bottom") + 
+  labs(x = "t A g??", 
+       y = "V a R i A n T? ??",
+       title = "S p A c E S c I e N c E")
+
+plot_1
+```
+
+
+
+
+
+
+## Task 2
+
+```{r}
+greenhouse <- read_csv(here("data", "San_Francisco_Communitywide_Greenhouse_Gas_Inventory.csv"))
+```
+
+```{r}
+greenhouse_summary <- greenhouse %>%
+  group_by(Sector_General) %>% 
+  summarize(sum = sum(Emissions_mtCO2e, na.rm = TRUE))
+
+greenhouse_summary
+
+
+greenhouse_summary_yr_type <- greenhouse %>% 
+  group_by(Calendar_Year, Commodity_Type) %>% 
+  summarize(sum = sum(Emissions_mtCO2e, na.rm = TRUE))
+
+greenhouse_summary_yr_type
+
+
+greenhouse_subset <- greenhouse %>% 
+  filter(Calendar_Year %in% "2005":"2019") %>% 
+  filter(str_detect(Sector_Detail2, "PG&E")) %>% 
+  select(Calendar_Year, Sector_Detail2, Emissions_mtCO2e)
+
+greenhouse_subset
+
+```
+
+## Task 3
+
+```{r}
+library(showtext)
+
+greenhouse_summary_fct <- greenhouse_summary %>% 
+  mutate(Sector_General = fct_reorder(Sector_General, sum))
+
+part_3 <- ggplot(data = greenhouse_summary_fct, aes(y = Sector_General, x = sum)) +
+  geom_col(aes(fill = Sector_General)) +
+  labs(y = "Sector",
+       x = "Quantity of Emissions (metric tons C02)",
+       title = "San Francisco Greenhouse Gas Emissions by Sector",
+       ) +
+  theme(legend.position = "none",
+      panel.grid = element_blank(),
+      plot.background = element_rect(fill = "azure"),
+      axis.text = element_text(color = "black", size = 8),
+      axis.title = element_text(color = "chocolate", size = 12)) +
+  scale_fill_paletteer_d(palette = "tvthemes::EarthKingdom") +
+  scale_x_log10(breaks = 10^c(1, 3, 5, 7), labels = c("10", "1000", "100000", "10000000"))
+
+ggsave(here("figs", "SF_Emissions_Pretty_Graph.png"), plot = part_3)
+
+#class(greenhouse_summary$sum)
+#showtext()
+#text = element_text(family = "Arial", face = "bold", size = 12)
+
+
+```
+
