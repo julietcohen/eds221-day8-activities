@@ -59,19 +59,19 @@ ggsave(here("figs", "space_launch.png"), plot = plot_1)
 ```
 
 ```{r}
-plot_2 <- ggplot(data = space_launches) +
-  geom_point(aes(
-    x = tag, y = variant,
-    color = type,
-    show.legend = FALSE),
-    size = 2) +
-  scale_fill_paletteer_d(palette = "tvthemes::EarthKingdom") + 
-  labs(x = "t A g??", 
-       y = "V a R i A n T? ??",
-       title = "S p A c E S c I e N c E") #+
+#plot_2 <- ggplot(data = space_launches) +
+#  geom_point(aes(
+#    x = tag, y = variant,
+#    color = type,
+#    show.legend = FALSE),
+#    size = 2) +
+#scale_fill_paletteer_d(palette = "tvthemes::EarthKingdom") + 
+#  labs(x = "t A g??", 
+#       y = "V a R i A n T? ??",
+#       title = "S p A c E S c I e N c E") #+
    #ggMarginal(plot_2, type = "boxplot", groupColour = TRUE)
 
-plot_2
+#plot_2
 ```
 
 
@@ -79,9 +79,9 @@ plot_2
 ## Task 1: do your worst
 
 ```{r}
-ggplot(data = space_launches, aes(y = type, x = JD)) +
-  geom_() +
-  scale_fill_paletteer_d(palette = "tvthemes::EarthKingdom")
+#ggplot(data = space_launches, aes(y = type, x = JD)) +
+#  geom_() +
+#  scale_fill_paletteer_d(palette = "tvthemes::EarthKingdom")
 ```
 
 ```{r}
@@ -157,10 +157,28 @@ part_3 <- ggplot(data = greenhouse_summary_fct, aes(y = Sector_General, x = sum)
 
 ggsave(here("figs", "SF_Emissions_Pretty_Graph.png"), plot = part_3)
 
+part_3
+
+# alt text: "Bar graph that shows the greenhouse gas emissions by sector in the city of San Francisco, but buildlings and transportation sectors emitting the most and the wastewater sector emitting the least."
+
+
 #class(greenhouse_summary$sum)
 #showtext()
 #text = element_text(family = "Arial", face = "bold", size = 12)
 
 
 ```
+
+```{r, fig.alt = "A histogram graph for each species of penguin showing the body mass of each. Gentoo penguins have the largest body mass and chinstrap have the smallest body mass, with Adeilie having the intermediate relative body mass."}
+library(palmerpenguins)
+
+ggplot(data = penguins, aes(x = body_mass_g)) +
+  geom_histogram() +
+  facet_wrap(~species)
+```
+
+
+
+
+
 
